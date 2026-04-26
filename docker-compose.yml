@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  control:
+    build: ./control
+    container_name: control
+    hostname: control
+    networks:
+      - ansible-net
+    volumes:
+      - ./playbooks:/ansible
+      - ./ansible_key:/root/.ssh/id_ed25519:ro
+    # Fix permissions on the mounted key, then sleep
+    command: >
+      bash -c "chmod 600 /root/.ssh/id_ed25519 &&
+               mkdir -p /root/.ssh &&
+               ssh-keyscan -H node1 node2 >> /root/.ssh/known_hosts 2>/dev/null;
+               sleep infinity"
+    depends_on:
+      - node1
+      - node2
+
+  node1:
+    build: ./managed
+    container_name: node1
+    hostname: node1
+    networks:
+      - ansible-net
+    volumes:
+      - ./ansible_key.pub:/home/ansible/.ssh/authorized_keys:ro
+
+  node2:
+    build: ./managed
+    container_name: node2
+    hostname: node2
+    networks:
+      - ansible-net
+    volumes:
+      - ./ansible_key.pub:/home/ansible/.ssh/authorized_keys:ro
+
+networks:
+  ansible-net:
+    driver: bridge

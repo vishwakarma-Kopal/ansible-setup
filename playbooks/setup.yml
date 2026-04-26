@@ -1,0 +1,27 @@
+---
+- name: Configure webservers
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Create a custom homepage
+      copy:
+        content: "Hello from {{ inventory_hostname }} managed by Ansible!"
+        dest: /var/www/html/index.html
+
+- name: Configure databases
+  hosts: databases
+  become: yes
+
+  tasks:
+    - name: Install PostgreSQL
+      apt:
+        name: postgresql
+        state: present
+        update_cache: yes
