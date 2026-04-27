@@ -6,9 +6,10 @@ A hands-on lab that provisions a local Ansible control node and two managed node
 
 ## Prerequisites
 
-- A Linux host (Ubuntu recommended)
+- AN EC2 Linux host (Ubuntu recommended)
 - Internet access to pull packages and images
 - A terminal with `sudo` access
+- After connecting with EC2 instance run - apt-get update **
 
 ---
 
